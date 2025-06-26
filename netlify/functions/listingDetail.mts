@@ -1,5 +1,5 @@
 import type { Handler } from '@netlify/functions'
-import { MongoClient, ObjectId } from 'mongodb'
+import { MongoClient } from 'mongodb'
 
 const uri = process.env.MONGODB_URI!
 const dbName = process.env.MONGODB_DB!
@@ -23,7 +23,7 @@ const handler: Handler = async (event, context) => {
     }
   }
 
-  const id = event.path.split('/').pop() // get ID from /listings/:id
+  const id = event.path.split('/').pop()
 
   if (!id) {
     return {
@@ -42,7 +42,7 @@ const handler: Handler = async (event, context) => {
     const db = cachedClient.db(dbName)
     const collection = db.collection(collectionName)
 
-    const listing = await collection.findOne({ _id: new ObjectId(id) })
+    const listing = await collection.findOne({ listingIdStr: id })
 
     if (!listing) {
       return {
