@@ -24,9 +24,16 @@ const handler: Handler = async (event, context) => {
   }
 
   try {
-    const page = parseInt(event.queryStringParameters?.page || '1')
-    const limit = parseInt(event.queryStringParameters?.limit || '10')
-    const skip = (page - 1) * limit
+    const pathParts = event.path.split('/')
+    const id = pathParts[pathParts.length - 1]
+
+    if (!id) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Missing listing ID in URL' }),
+      }
+    }
 
     if (!cachedClient) {
       cachedClient = new MongoClient(uri)
@@ -36,13 +43,20 @@ const handler: Handler = async (event, context) => {
     const db = cachedClient.db(dbName)
     const collection = db.collection(collectionName)
 
-    const total = await collection.countDocuments()
-    const data = await collection.find().skip(skip).limit(limit).toArray()
+    const listing = await collection.findOne({ listingIdStr: id })
+
+    if (!listing) {
+      return {
+        statusCode: 404,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Listing not found' }),
+      }
+    }
 
     return {
       statusCode: 200,
       headers: corsHeaders,
-      body: JSON.stringify({ total, page, limit, data }),
+      body: JSON.stringify(listing),
     }
   } catch (err: any) {
     return {
