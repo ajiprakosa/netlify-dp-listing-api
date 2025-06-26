@@ -2,7 +2,7 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/listings"
+  from = "/listings/"
   to = "/.netlify/functions/listings"
   status = 200
   force = true
