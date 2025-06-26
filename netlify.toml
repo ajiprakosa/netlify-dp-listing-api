@@ -12,17 +12,3 @@
   to = "/.netlify/functions/listingDetail/:id"
   status = 200
   force = true
-
-[[headers]]
-  for = "/listings"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
-    Access-Control-Allow-Methods = "GET, OPTIONS"
-    Access-Control-Allow-Headers = "Content-Type"
-
-[[headers]]
-  for = "/.netlify/functions/listings"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
-    Access-Control-Allow-Methods = "GET, OPTIONS"
-    Access-Control-Allow-Headers = "Content-Type"

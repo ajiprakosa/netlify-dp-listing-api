@@ -8,15 +8,17 @@ const collectionName = process.env.MONGODB_COLLECTION!
 let cachedClient: MongoClient | null = null
 
 const handler: Handler = async (event, context) => {
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json',
+  }
+
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Content-Type': 'application/json',
-      },
+      headers: corsHeaders,
       body: '',
     }
   }
@@ -39,23 +41,13 @@ const handler: Handler = async (event, context) => {
 
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Content-Type': 'application/json',
-      },
+      headers: corsHeaders,
       body: JSON.stringify({ total, page, limit, data }),
     }
   } catch (err: any) {
     return {
       statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Content-Type': 'application/json',
-      },
+      headers: corsHeaders,
       body: JSON.stringify({ error: 'Internal Server Error', details: err.message }),
     }
   }
