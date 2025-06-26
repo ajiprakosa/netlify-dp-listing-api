@@ -8,6 +8,19 @@ const collectionName = process.env.MONGODB_COLLECTION!
 let cachedClient: MongoClient | null = null
 
 const handler: Handler = async (event, context) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json',
+      },
+      body: '',
+    }
+  }
+
   try {
     const page = parseInt(event.queryStringParameters?.page || '1')
     const limit = parseInt(event.queryStringParameters?.limit || '10')
@@ -26,12 +39,23 @@ const handler: Handler = async (event, context) => {
 
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ total, page, limit, data }),
     }
   } catch (err: any) {
     return {
       statusCode: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ error: 'Internal Server Error', details: err.message }),
     }
   }
