@@ -1,0 +1,14 @@
+[build]
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/listings"
+  to = "/.netlify/functions/listings"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/listings/:id"
+  to = "/.netlify/functions/listingDetail/:id"
+  status = 200
+  force = true
